@@ -1,0 +1,520 @@
+﻿@model GetSurveysModel
+
+@{
+    string[] months = new string[] { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+}
+
+<nav class="d-lg-block sidebar nav" style="background: #252526; position: sticky; top: 15%; width: 10%; ">
+    <div style="background-color: #252526; " class="list-group list-group-flush container-fluid">
+        <div style="padding: 0.7rem; background-color: #252526;" class="dark-theme-texts">Kategoriler</div>
+        <form style="background-color: #252526; " asp-action="Index" asp-controller="Survey" asp-area="" method="post"
+              class="w-75 mx-auto m-3">
+
+
+            @for (int i = 0; i < Model.Categories.Count; i++)
+            {
+
+                if (Model.SelectedCategories[i])
+                {
+                    <div>
+                        <input style="background-color: #252526; " class="input if" id="@i" type="checkbox" asp-for="@Model.SelectedCategories[i]" value=false hidden />
+                        <label style="background-color: #252526; " for="@i" class="if dark-theme-texts unselectable">@Model.Categories[i].CategoryName</label>
+                        @Html.HiddenFor(model => model.SelectedCategories[i])
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <input class="input else" id="@i" type="checkbox" asp-for="@Model.SelectedCategories[i]" value=true hidden />
+                        <label for="@i" class="else dark-theme-texts unselectable">@Model.Categories[i].CategoryName</label>
+                        @Html.HiddenFor(model => model.SelectedCategories[i])
+                    </div>
+                }
+            }
+            <input type="submit" value="Filtrele" class="input-btn" />
+        </form>
+    </div>
+</nav>
+
+@if (Model.Categories.Count != 0)
+{
+    @if (Model.SelectedCategories.Contains(true))
+    {
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3" style="padding:7rem;">
+            @for (int i = 0; i < Model.Surveys.Count; i++)
+            {
+                if (Model.Surveys[i].WillPublished == 1)
+                {
+                    <div class="col mb-4" style="min-width:13rem;">
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day dark-theme-texts">@Model.Surveys[i].CreatedDate.Day</span>
+                                            <span class="widget-49-date-month dark-theme-texts">@months[Model.Surveys[i].CreatedDate.Month - 1]</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title dark-theme-texts" style="font-size:1.25rem;">@Model.Surveys[i].Name</span>
+                                            <i class="widget-49-pro-title dark-theme-texts" style="font-size:0.7rem;color:rgba(223,223,223,0.6)">Created By: @Model.Surveys[i].CreatedBy</i>
+                                        </div>
+                                    </div>
+                                    <p class="dark-theme-texts" style="font-size:0.8rem;">@Model.Surveys[i].Description</p>
+
+                                    <div class="widget-49-meeting-action">
+                                        <a asp-action="AttendSurvey" asp-controller="Survey" asp-area="" asp-route-id="@Model.Surveys[i].SurveyId"
+                                           class="btn btn-sm dark-theme-texts p">Katıl</a>
+
+                                        <a asp-action="SurveyResults" asp-controller="Survey" asp-area="" asp-route-id="@Model.Surveys[i].SurveyId"
+                                           class="btn btn-sm dark-theme-texts n">Sonuçları gör</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3" style="padding:7rem;">
+
+            @for (int i = 0; i < Model.AllSurveys.Count; i++)
+            {
+                if (Model.AllSurveys[i].WillPublished == 1)
+                {
+
+                    <div class="col mb-4" style="min-width:13rem;">
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day dark-theme-texts">@Model.AllSurveys[i].CreatedDate.Day</span>
+                                            <span class="widget-49-date-month dark-theme-texts">@months[Model.AllSurveys[i].CreatedDate.Month - 1]</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title dark-theme-texts"style="font-size:1.25rem;">@Model.AllSurveys[i].Name</span>
+                                            <i class="widget-49-pro-title dark-theme-texts" style="font-size:0.7rem;color:rgba(223,223,223,0.6)">Created By: @Model.AllSurveys[i].CreatedBy</i>
+                                        </div>
+                                    </div>
+                                    <p class="dark-theme-texts"style="font-size:0.8rem;">@Model.AllSurveys[i].Description</p>
+
+                                    <div class="widget-49-meeting-action">
+                                        <a asp-action="AttendSurvey" asp-controller="Survey" asp-area="" asp-route-id="@Model.AllSurveys[i].SurveyId"
+                                           class="btn btn-sm dark-theme-texts p">Katıl</a>
+
+                                        <a asp-action="SurveyResults" asp-controller="Survey" asp-area="" asp-route-id="@Model.AllSurveys[i].SurveyId"
+                                           class="btn btn-sm dark-theme-texts n">Sonuçları gör</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+
+        </div>
+    }
+}
+
+
+
+<script>
+    $('.if').click(function () {
+        debugger;
+        $(this).removeClass("checked");
+        $(this).toggleClass("unchecked");
+    });
+
+    $('.else').click(function () {
+        debugger;
+        $(this).removeClass("unchecked");
+        $(this).toggleClass("checked");
+    });
+</script>
+
+<style>
+    .title {
+    }
+
+    .desc {
+    }
+
+    .nav {
+        float: left;
+        width: 30%;
+    }
+
+    .article {
+        float: left;
+        width: 70%
+    }
+
+    .unselectable {
+        user-select: none;
+    }
+
+    .if, .else {
+        border-radius: 3px;
+    }
+
+    .checked {
+        background-color: #124143 !important;
+    }
+
+    .unchecked {
+        background-color: #124143 !important;
+    }
+
+    .input-btn {
+        border-radius: 3px;
+        color: #252526;
+        background-color: aliceblue;
+        border-color: #252526;
+    }
+
+        .input-btn:hover {
+            color: aliceblue;
+            background-color: #252526;
+            border-color: aliceblue;
+        }
+
+    .dark-theme-texts {
+        color: rgb(223,223,223);
+    }
+
+    .p {
+        background-color: #495057;
+        border-color: #0093ff;
+    }
+
+        .p:hover {
+            color: #0093ff;
+        }
+
+    .n {
+        background-color: #495057;
+        border-color: #b5a800;
+    }
+
+        .n:hover {
+            color: #b5a800;
+        }
+
+
+    .card-margin {
+        margin-bottom: 1.875rem;
+    }
+
+    .card {
+        border: 0;
+        box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #565353;
+        background-clip: border-box;
+        border: 1px solid #e6e4e9;
+        border-radius: 8px;
+    }
+
+        .card .card-header.no-border {
+            border: 0;
+        }
+
+        .card .card-header {
+            background: none;
+            padding: 0 0.9375rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            min-height: 50px;
+        }
+
+    .card-header:first-child {
+        border-radius: calc(8px - 1px) calc(8px - 1px) 0 0;
+    }
+
+    .widget-49 .widget-49-title-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #124143;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-primary .widget-49-date-day {
+                color: rgb(223,223,223);
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-primary .widget-49-date-month {
+                color: rgb(223,223,223);
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: red;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-secondary .widget-49-date-day {
+                color: red;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-secondary .widget-49-date-month {
+                color: red;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-success {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: rgb(223,223,223);
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-success .widget-49-date-day {
+                color: yellow;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-success .widget-49-date-month {
+                color: yellow;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #ebf7ff;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-info .widget-49-date-day {
+                color: #36afff;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-info .widget-49-date-month {
+                color: #36afff;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-warning {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: floralwhite;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-warning .widget-49-date-day {
+                color: #FFC868;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-warning .widget-49-date-month {
+                color: #FFC868;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-danger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #feeeef;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-danger .widget-49-date-day {
+                color: #F95062;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-danger .widget-49-date-month {
+                color: #F95062;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-light {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #fefeff;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-light .widget-49-date-day {
+                color: #f7f9fa;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-light .widget-49-date-month {
+                color: #f7f9fa;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-dark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #ebedee;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-dark .widget-49-date-day {
+                color: #394856;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-dark .widget-49-date-month {
+                color: #394856;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-base {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #f0fafb;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-day {
+                color: #68CBD7;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-month {
+                color: #68CBD7;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-meeting-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 1rem;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-meeting-info .widget-49-pro-title {
+                color: rgb(223,223,223);
+                font-size: 14px;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-meeting-info .widget-49-meeting-time {
+                color: rgb(223,223,223);
+                font-size: 13px;
+            }
+
+    .widget-49 .widget-49-meeting-points {
+        font-weight: 400;
+        font-size: 13px;
+        margin-top: .5rem;
+    }
+
+        .widget-49 .widget-49-meeting-points .widget-49-meeting-item {
+            display: list-item;
+            color: rgb(223,223,223);
+        }
+
+            .widget-49 .widget-49-meeting-points .widget-49-meeting-item span {
+                margin-left: .5rem;
+            }
+
+    .widget-49 .widget-49-meeting-action {
+        text-align: right;
+    }
+
+        .widget-49 .widget-49-meeting-action a {
+            text-transform: uppercase;
+        }
+</style>

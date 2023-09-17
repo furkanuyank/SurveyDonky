@@ -1,0 +1,27 @@
+﻿@model List<SurveyCategory>
+
+<table class="table table-sm table-bordered table-hover">
+
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+
+
+        <tr>
+            <td>@Model[i].SurveyCategoryId</td>
+            <td>@Model[i].CategoryName</td>
+
+            <td>
+                <a asp-action="DeleteCategory" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyCategoryId"
+                   class="btn btn-danger btn-sm">Sil</a>
+            </td>
+        </tr>
+
+    }
+</table>
+<a asp-action="AddCategory" asp-controller="Admin" asp-area="Admin"
+   class="btn btn-danger btn-sm">Ekle</a>

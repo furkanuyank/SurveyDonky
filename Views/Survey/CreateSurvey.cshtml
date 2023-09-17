@@ -1,0 +1,201 @@
+﻿@model AddSurveyModel
+
+<form asp-action="CreateSurvey" asp-controller="Survey" asp-area="" method="post"
+      class="w-75 mx-auto m-3" autocomplete="off">
+    @if (Model.QuestionQuantity <= 0)
+    {
+        <div class="form-group mt-5">
+
+            <div class="mb-3">
+                <label for="AnketAd" class="form-label dark-theme-texts">Anketin Adı</label>
+                <input type="text" asp-for="@Model.SurveyName" style="background-color: aliceblue; min-width: 15rem; width: 50%" class="form-control" id="AnketAd" required maxlength="32">
+            </div>
+
+            <div class="mb-3">
+                <label for="Aciklama" class="form-label dark-theme-texts">Anketin Açıklaması</label>
+                <textarea class="form-control" style="background-color: aliceblue; min-width: 15rem; width: 50%" id="Aciklama" rows="3" asp-for="@Model.Description" required maxlength="80"></textarea>
+            </div>
+            @Html.HiddenFor(model => model.Description)
+
+            <div class="mb-3">
+                <label for="Kateogri" class="form-label dark-theme-texts">Kategori</label>
+                <select id="Kateogri" asp-for="@Model.CategoryId" class="form-select form-control" style="background-color: aliceblue; min-width: 7rem; width: 20%">
+                    @foreach (var item in Model.Categories)
+                    {
+                        <option style="background-color: aliceblue; color:black;" value=@item.SurveyCategoryId>@item.CategoryName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="SoruSayi" class="form-label dark-theme-texts">Soru Sayısı</label>
+                <input type="number" asp-for="@Model.QuestionQuantity" style="background-color: aliceblue; min-width: 7rem; width: 20%" class="form-control" id="SoruSayi" required min=1 max=20 value="1">
+            </div>
+
+            <div class="mb-3">
+                <label for="CreatedBy" class="form-label dark-theme-texts">Created By</label>
+                <input type="text" asp-for="@Model.CreatedBy" style="background-color: aliceblue; min-width: 15rem; width: 50%" class="form-control" id="CreatedBy" required maxlength="25">
+            </div>
+
+        </div>
+        <a asp-action="Index" asp-controller="Survey" asp-area="" class="btn dark-theme-texts n">Geri Dön</a>
+        <button type="submit" class="btn dark-theme-texts p">Devam et</button>
+    }
+
+    @if (Model.QuestionQuantity > 0)
+    {
+        @Html.HiddenFor(model => model.SurveyName)
+        @Html.HiddenFor(model => model.CategoryId)
+        @Html.HiddenFor(model => model.CreatedBy)
+        @Html.HiddenFor(model => model.CreatedDate)
+        @Html.HiddenFor(model => model.Description)
+
+
+        @for (int i = 0; i < Model.QuestionQuantity; i++)
+        {
+            string id = "id_" + i;
+            <div class="questions" style="width:75%;">
+                <div class="form-group mt-2" id="@id">
+                    <div class="mb-3">
+                        <label for="Soru@(i)" class="form-label dark-theme-texts">Soru @(i+1)</label>
+                        <textarea style="background-color: aliceblue;" class="form-control question-input" id="Soru@(i)" rows="3" asp-for="@Model.QuestionsText[i]" required maxlength="300"></textarea>
+                    </div>
+                </div>
+
+                <div class="add_answer unselectable tus dark-theme-texts">+</div>
+                <div class="remove_answer unselectable tus dark-theme-texts">-</div>
+
+                <div class="mb-3" id="answer">
+                    <label for="Soru@(i)_Cevap0" class="form-label dark-theme-texts">Cevap 1</label>
+                    <textarea style="background-color: aliceblue;" class="form-control form-control-sm" asp-for="@Model.AnswerTexts[i][0]" required id="Soru@(i)_Cevap0" rows="3" maxlength="300"></textarea>
+                </div>
+                <div class="mb-3" id="answer">
+                    <label for="Soru@(i)_Cevap1" class="form-label dark-theme-texts">Cevap 2</label>
+                    <textarea style="background-color: aliceblue;" class="form-control form-control-sm" asp-for="@Model.AnswerTexts[i][1]" required id="Soru@(i)_Cevap1" rows="3" maxlength="300"></textarea>
+                </div>
+                <div class="mb-3 invis" id="answer">
+                    <label for="Soru@(i)_Cevap2" class="form-label dark-theme-texts">Cevap 3</label>
+                    <textarea style="background-color: aliceblue;" class="form-control form-control-sm" asp-for="@Model.AnswerTexts[i][2]" id="Soru@(i)_Cevap2" rows="3" maxlength="300"></textarea>
+                </div>
+                <div class="mb-3 invis" id="answer">
+                    <label for="Soru@(i)_Cevap3" class="form-label dark-theme-texts">Cevap 4</label>
+                    <textarea style="background-color: aliceblue;" class="form-control form-control-sm" asp-for="@Model.AnswerTexts[i][3]" id="Soru@(i)_Cevap3" rows="3" maxlength="300"></textarea>
+                </div>
+                <div class="mb-3 invis" id="answer">
+                    <label for="Soru@(i)_Cevap4" class="form-label dark-theme-texts">Cevap 5</label>
+                    <textarea style="background-color: aliceblue;" class="form-control form-control-sm" asp-for="@Model.AnswerTexts[i][4]" id="Soru@(i)_Cevap4" rows="3" maxlength="300"></textarea>
+                </div>
+
+            </div>
+        }
+
+        <div class="form-group mt-10">
+            <a asp-action="CreateSurvey" asp-controller="Survey" asp-area=""
+               class="btn dark-theme-texts n">Geri Dön</a>
+            <button type="submit" class="btn dark-theme-texts p" >Kaydet</button>
+        </div>
+    }
+
+</form>
+
+
+<script>
+
+    $('.add_answer').click(function () {
+        debugger;
+        var answer = $(this).next().next().next().next();
+        for (var i = 0; i < 3; i++) {
+            if (answer.hasClass("block")) {
+                answer = answer.next();
+            }
+            else {
+                answer.children("textarea").attr('required', true);
+                answer.addClass("block");
+                i = 6;
+            }
+        }
+    });
+    $('.remove_answer').click(function () {
+        debugger;
+
+        var answer = $(this);
+        for (var i = 0; i < 5; i++) {
+            answer = answer.next();
+        }
+
+        for (var i = 0; i < 3; i++) {
+            if (!answer.hasClass("block")) {
+                answer = answer.prev();
+            }
+            else {
+                answer.children("textarea").attr('required', false);
+                answer.children("textarea").val("");
+                answer.removeClass("block");
+                i = 6;
+            }
+        }
+    });
+</script>
+
+<style>
+    .dark-theme-texts {
+        color: rgb(223,223,223);
+    }
+
+    .p {
+        background-color: #495057;
+        border-color: #0093ff;
+    }
+
+        .p:hover {
+            color: #0093ff;
+        }
+
+    .n {
+        background-color: #495057;
+        border-color: #b5a800;
+    }
+
+        .n:hover {
+            color: #b5a800;
+        }
+
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .tus {
+        border: 300px;
+        border-radius: 200px;
+        background-color: rgba(255,255,255,0.4);
+        text-align: center;
+        width: 8%;
+        display: inline-block;
+    }
+
+        .tus:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+    .questions {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 0.5rem;
+        padding: 0.5rem;
+        background-color: #0d3334;
+    }
+
+    .block {
+        visibility: visible !important;
+        position: unset !important;
+    }
+
+    .invis {
+        visibility: hidden;
+        position: absolute;
+    }
+</style>

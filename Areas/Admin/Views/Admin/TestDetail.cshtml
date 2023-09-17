@@ -1,0 +1,86 @@
+﻿@model TestDetailModel
+@{
+    string[] choicesArray = new string[] { "A", "B", "C", "D", "E" };
+    string[] lines;
+}
+<div class="container">
+    <div class="questions">
+        <h1>Testin Adı: @Model.Test.Name</h1>
+        <input type="hidden" asp-for="@Model.Test.Name" />
+        <h1>Açıklama: @Model.Test.Description</h1>
+        <input type="hidden" asp-for="@Model.Test.Description" />
+        <br />
+    </div>
+
+    @for (int i = 0; i < Model.Answers.Count; i++)
+    {
+        <div class="questions">
+            <label id="Soru-@(i + 1)" class="dark-theme-texts">
+                @(i+1)) <br />
+                @{
+                    lines = Model.Questions[i].QuestionText.Split("\n");
+                    foreach (var line in lines)
+                    {
+                        <label class="form-check-label dark-theme-texts" style="word-wrap: break-word; font-size: 2rem;">@line</label>
+                        <br />
+                    }
+                }
+            </label>
+            <br />
+            <br />
+
+            @for (int j = 0; j < Model.Answers[i].Count; j++)
+            {
+                <label class="form-check-label" for="@i-@j">
+                    @choicesArray[j])
+                    @{
+                        lines = Model.Answers[i][j].AnswerText.Split("\n");
+                        foreach (var line in lines)
+                        {
+                            <label class="form-check-label dark-theme-texts" style="word-wrap: break-word;font-size:1.5rem;" for="@i-@j">@line</label>
+                            <br />
+                        }
+                    }
+                </label>
+                <br />
+                <br />
+            }
+        </div>
+        <br />
+    }
+
+    @if (Model.Test.WillPublished == 0)
+    {
+        <a asp-action="YayinlaTest" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Test.TestId"
+           class="btn btn-warning btn-sm">Ekle</a>
+
+        <a asp-action="SilTest" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Test.TestId"
+           class="btn btn-danger btn-sm">Sil</a>
+
+        <a asp-action="TestList" asp-controller="Admin" asp-area="Admin"
+           class="btn btn-danger btn-sm">Geri Dön</a>
+
+    }
+    else
+    {
+        <a asp-action="KaldirTest" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Test.TestId"
+           class="btn btn-warning btn-sm">Kaldır</a>
+
+        <a asp-action="SilTest" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Test.TestId"
+           class="btn btn-danger btn-sm">Sil</a>
+
+        <a asp-action="TestList" asp-controller="Admin" asp-area="Admin"
+           class="btn btn-danger btn-sm">Geri Dön</a>
+    }
+</div>
+
+<style>
+    .questions {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 0.5rem;
+        padding: 0.5rem;
+        background-color: #efebc4;
+    }
+</style>
+

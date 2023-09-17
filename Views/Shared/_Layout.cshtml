@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html >
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SurveyDonky</title>
+    <link rel="icon" href="~/Images/logo.png" />
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/jquery/jquery.min.js"></script>
+    <script src="~/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/plotly.js/plotly.min.js"></script>
+</head>
+<body style="background-color: #252526;font-size:1.25rem;">
+
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color:#124143; position: sticky; top: 0%; width: 100%; z-index:10;">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home" asp-area=""><img src="~/Images/logo.png" alt="logo" width="40">  </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Survey" asp-area="" style="color: rgba(255,255,255,0.8)">Anketler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Test" asp-area="" style="color: rgba(255,255,255,0.8)">Testler</a>
+                    </li>
+                    <li class="nav-item">
+                        <div>
+                            <a class="nav-link" asp-action="CreateSurvey" asp-controller="Survey" asp-area="" style="color: rgba(255,255,255,0.8)">Anket Ekle</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="CreateTest" asp-controller="Test" asp-area="" style="color: rgba(255,255,255,0.8)">Test Ekle</a>
+                    </li>
+                </ul>
+
+            </div>
+            <a class="nav-item nav-link ml-auto admin_tusu" asp-action="AdminLogin" asp-controller="Login" asp-area="">Admin Paneli</a>
+        </div>
+    </nav>
+    <div class="mt-2">
+        <div class="container-fluid">
+            @RenderBody()
+        </div>
+    </div>
+
+</body>
+</html>
+
+<style>
+    .admin_tusu {
+        border: 5px;
+        border-radius: 10px;
+        background-color: tomato;
+        color: rgba(255,255,255,0.8);
+        max-width: 18%;
+        text-align: center;
+    }
+        .admin_tusu:hover {
+            color: rgba(255,255,255,0.8);
+            background-color: #e94d31;
+        }
+</style>
+

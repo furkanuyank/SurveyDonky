@@ -1,0 +1,15 @@
+﻿@model SurveyCategory
+<form asp-action="AddCategory" asp-controller="Admin" asp-area="Admin" method="post"
+      class="w-75 mx-auto m-3" autocomplete="off">
+    <div class="form-group mt-5">
+
+        <div class="mb-3">
+            <label for="KategoriAd" class="form-label">Kategori Adı</label>
+            @Html.TextBoxFor(model=>model.CategoryName,new {@style= "width:50%;", @class= "form-control",@id= "KategoriAd",@required="true", @maxlength = "20"})
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Ekle</button>
+
+</form>
+<a asp-action="CategoryList" asp-controller="Admin" asp-area="Admin"
+   class="btn btn-danger btn-sm">Geri Dön</a>

@@ -1,0 +1,119 @@
+﻿@model AttendSurveyModel
+@{
+    string[] lines;
+
+}
+<nav class="d-lg-block sidebar" style="position: sticky; top: 30%; width: 10%; background-color: #252526;">
+    <div style="background-color: #252526;" class="list-group list-group-flush mx-3 mt-4">
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            <a style="background-color: #252526;" href="#Soru-@(i+1)" class="list-group-item list-group-item-action py-2 ripple dark-theme-texts href" aria-current="true">
+                <span style="background-color: #252526;">Soru @(i+1)</span>
+            </a>
+        }
+    </div>
+</nav>
+<script>
+    $('.href').on("click", function () {
+        debugger;
+        var docHeight = ($(window).height() / 3);
+        $('html,body').animate({
+            scrollTop: ($($(this).attr('href')).offset().top - docHeight) + 1
+        }, 1000);
+    });
+</script>
+<div class="container">
+    <form asp-action="AttendSurvey" asp-controller="Survey" asp-area="" method="post"
+          class="w-75 mx-auto m-3">
+
+        <div class="questions">
+            <h1 class="dark-theme-texts">Anketin Adı: @Model.Survey.Name</h1>
+            <input type="hidden" asp-for="@Model.Survey.Name" />
+            <br />
+            <h5 class="dark-theme-texts">Açıklama: @Model.Survey.Description</h5>
+            <input type="hidden" asp-for="@Model.Survey.Description" />
+            @Html.HiddenFor(model => model.Survey.SurveyId)
+        </div>
+        @Html.HiddenFor(model=>model.SurveyPollsterSurveyId)
+        @Html.HiddenFor(model=>model.Ip)
+
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+    <div class="questions">
+        @Html.HiddenFor(model => model.Questions[i].SurveyQuestionId)
+        <div id="@i">
+            <label id="Soru-@(i + 1)" class="dark-theme-texts">
+                @(i+1)) <br />
+                @{
+                    lines = @Model.Questions[i].QuestionText.Split("\n");
+                    foreach (var line in lines)
+                    {
+                        <label class="form-check-label dark-theme-texts" style="word-wrap: break-word">@line</label>
+                        <br />
+                    }
+                }
+            </label>
+            <br />
+            <br />
+            <input type="hidden" asp-for="@Model.Questions[i].QuestionText" a />
+        </div>
+
+        @for (int j = 0; j < Model.Answers[i].Count; j++)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="@i-@j" asp-for="@Model.SelectedValues[i]" value=@j required>
+
+                <label class="form-check-label" for="@i-@j">
+                    @{
+                        lines = Model.Answers[i][j].AnswerText.Split("\n");
+                        foreach (var line in lines)
+                        {
+                            <label class="form-check-label dark-theme-texts" style="word-wrap: break-word" for="@i-@j">@line</label>
+                            <br />
+                        }
+                    }
+                </label>
+            </div>
+            <br />
+
+        }
+        @Html.HiddenFor(model => model.SelectedValues[i])
+    </div>
+        }
+        <a asp-action="Index" asp-controller="Survey" asp-area="" class="btn dark-theme-texts n">Geri Dön</a>
+        <input type="submit" value="Kaydet" class="btn p dark-theme-texts" />
+    </form>
+</div>
+
+<style>
+    .questions {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 0.5rem;
+        padding: 0.5rem;
+        background-color: #0d3334;
+        white-space: normal;
+    }
+
+    .dark-theme-texts {
+        color: rgb(223,223,223);
+    }
+
+    .p {
+        background-color: #495057;
+        border-color: #0093ff;
+    }
+
+        .p:hover {
+            color: #0093ff;
+        }
+
+    .n {
+        background-color: #495057;
+        border-color: #b5a800;
+    }
+
+        .n:hover {
+            color: #b5a800;
+        }
+</style>

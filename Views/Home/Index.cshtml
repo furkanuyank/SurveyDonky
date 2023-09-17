@@ -1,0 +1,109 @@
+﻿<div class="body">
+    <div style="margin-top:15%">
+        <h1 align="center" style="font-family:Arial; color:rgb(179,178,178)">SurveyDonky ile Anket-Test Oluşturmaya Başlayın!</h1>
+        <p style="text-align: center; color: rgb(179,178,178); font-size: 110%;"><strong>SurveyDonky'e Hoş Geldiniz!</strong></p>
+        <br />
+        <div style="text-align:center">
+            <a class="a" asp-action="Index" asp-controller="Survey" asp-area="">
+                <span class="span"></span>
+                <span class="span"></span>
+                <span class="span"></span>
+                <span class="span"></span>Anketler
+            </a>
+        </div>
+        <br />
+        <div style="text-align:center">
+            <a class="a" asp-action="Index" asp-controller="Test" asp-area="">
+                <span class="span"></span>
+                <span class="span"></span>
+                <span class="span"></span>
+                <span class="span"></span>Testler
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .a {
+        text-decoration:none;
+        position: relative;
+        display: inline-block;
+        padding: 15px 30px;
+        color: #44adb1;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-decoration: none;
+        font-size: 24px;
+        overflow: hidden;
+        transition: 0.2s;
+    }
+
+        .a:hover {
+            text-decoration: none;
+            color: #fff;
+            background: #44adb1;
+            box-shadow: 0 0 10px #44adb1, 0 0 40px #44adb1,0 0 80px #44adb1;
+            transition-delay: 1s;
+        }
+
+        .a .span {
+            position: absolute;
+            display: block;
+        }
+
+            .a .span:nth-child(1) {
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #44adb1);
+            }
+
+        .a:hover .span:nth-child(1) {
+            left: 100%;
+            transition: 1s;
+        }
+
+        .a .span:nth-child(3) {
+            bottom: 0;
+            right: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg, transparent, #44adb1);
+        }
+
+        .a:hover .span:nth-child(3) {
+            right: 100%;
+            transition: 1s;
+            transition-delay: 0.5s;
+        }
+
+        .a .span:nth-child(2) {
+            top: -100%;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #44adb1);
+        }
+
+        .a:hover .span:nth-child(2) {
+            top: 100%;
+            transition: 1s;
+            transition-delay: 0.25s;
+        }
+
+        .a .span:nth-child(4) {
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(360deg, transparent, #44adb1);
+        }
+
+        .a:hover .span:nth-child(4) {
+            bottom: 100%;
+            transition: 1s;
+            transition-delay: 0.75s;
+        }
+</style>

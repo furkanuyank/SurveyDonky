@@ -1,0 +1,50 @@
+﻿@model List<Survey>
+
+<table class="table table-sm table-bordered table-hover">
+
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        if (Model[i].WillPublished == 0)
+        {
+            <tr style="background-color: #a92020">
+                <td>@Model[i].SurveyId</td>
+                <td>@Model[i].Name</td>
+
+                <td>
+                    <a asp-action="SurveyDetail" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-warning btn-sm">İncele</a>
+
+                    <a asp-action="YayinlaSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-warning btn-sm">Ekle</a>
+
+                    <a asp-action="SilSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-danger btn-sm">Sil</a>
+                </td>
+            </tr>
+        }
+        else if (Model[i].WillPublished == 1)
+        {
+            <tr>
+                <td>@Model[i].SurveyId</td>
+                <td>@Model[i].Name</td>
+
+                <td>
+                    <a asp-action="SurveyDetail" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-warning btn-sm">İncele</a>
+
+                    <a asp-action="KaldirSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-warning btn-sm">Kaldır</a>
+
+                    <a asp-action="SilSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model[i].SurveyId"
+                       class="btn btn-danger btn-sm">Sil</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+

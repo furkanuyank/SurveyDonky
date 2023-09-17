@@ -1,0 +1,128 @@
+﻿@model GetResultModel
+
+<h2 class="dark-theme-texts">Anketin Adı: @Model.Survey.Name</h2>
+<h4 class="dark-theme-texts">Açıklama: @Model.Survey.Description</h4>
+<br />
+@{
+    List<List<string>> strings = new List<List<string>>();
+    List<List<int>> ints = new List<List<int>>();
+    List<int> size = new List<int>();
+    int control = 0;
+    string[] lines;
+    string newAnswer = "";
+}
+@for (int i = 0; i < Model.Questions.Count; i++)
+{
+    @for (int j = 0; j < Model.Answers[i].Count; j++)
+    {
+        control += Model.Answers[i][j].Choice;
+    }
+}
+
+
+@if (control == 0)
+{
+    <h2 class="dark-theme-texts">Bu teste katılım olmamış</h2>
+}
+else
+{
+    @for (int i = 0; i < Model.Answers.Count; i++)
+    {
+        size.Add(Model.Answers[i].Count);
+        List<int> tempInts = new List<int>();
+        List<string> tempStrings = new List<string>();
+        for (int j = 0; j < Model.Answers[i].Count; j++)
+        {
+            tempInts.Add(Model.Answers[i][j].Choice);
+
+            newAnswer = "";
+            lines = Model.Answers[i][j].AnswerText.Split("\r\n");
+            foreach (var item in lines)
+            {
+                newAnswer += item;
+                newAnswer += " ";
+            }
+
+            tempStrings.Add(newAnswer);
+        }
+        ints.Add(tempInts);
+        strings.Add(tempStrings);
+    }
+
+    @for (int i = 0; i < Model.Answers.Count; i++)
+    {
+        <div id="@i">
+            <label id="Soru-@(i + 1)" class="dark-theme-texts">
+                @(i + 1)) <br />
+                @{
+                    lines = Model.Questions[i].QuestionText.Split("\n");
+                    foreach (var line in lines)
+                    {
+                        <label class="form-check-label dark-theme-texts" style="word-wrap: break-word">@line</label>
+                        <br />
+                    }
+                }
+            </label>
+            <br />
+            <br />
+        </div>
+
+        string id = "myDiv" + i;
+        <div id="@id" style="background-color: #252526"></div>
+        <script>
+        var data = [{
+            values: JSON.parse('@Html.Raw(Json.Serialize(ints[i]))'),
+            labels: JSON.parse('@Html.Raw(Json.Serialize(strings[i]))'),
+            type: 'pie',
+            marker: {
+                colors: [
+                    '#C0F7B7',
+                    '#7B113A',
+                    '#141E61',
+                    '#124143',
+                    '#2D4263'
+                ]
+            }
+        }];
+
+        var layout = {
+            height: 400,
+            width: 500,
+            paper_bgcolor: "#252526",
+            font: {
+                color: 'rgb(223,223,223)'
+            },
+            showlegend: false
+        };
+
+        Plotly.newPlot("myDiv"+"@i", data, layout);
+        </script>
+    }
+}
+<br />
+<a asp-action="Index" asp-controller="Survey" asp-area="" class="btn dark-theme-texts n">Geri Dön</a>
+
+<style>
+
+    .dark-theme-texts {
+        color: rgb(223,223,223);
+    }
+
+    .p {
+        background-color: #495057;
+        border-color: #0093ff;
+    }
+
+        .p:hover {
+            color: #0093ff;
+        }
+
+    .n {
+        background-color: #495057;
+        border-color: #b5a800;
+    }
+
+        .n:hover {
+            color: #b5a800;
+        }
+</style>

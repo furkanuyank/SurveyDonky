@@ -1,0 +1,84 @@
+﻿@model SurveyDetailModel
+@{
+    string[] lines;
+
+}
+<div class="container">
+    <div class="questions">
+        <h1>Anketin Adı: @Model.Survey.Name</h1>
+        <input type="hidden" asp-for="@Model.Survey.Name" />
+        <h1>Açıklama: @Model.Survey.Description</h1>
+        <input type="hidden" asp-for="@Model.Survey.Description" />
+        <br />
+    </div>
+
+    @for (int i = 0; i < Model.Answers.Count; i++)
+    {
+        <div class="questions">
+            <label id="Soru-@(i + 1)" class="dark-theme-texts">
+                @(i+1)) <br />
+                @{
+                    lines = Model.Questions[i].QuestionText.Split("\n");
+                    foreach (var line in lines)
+                    {
+                        <label class="form-check-label dark-theme-texts" style="word-wrap: break-word; font-size: 2rem;">@line</label>
+                        <br />
+                    }
+                }
+            </label>
+            <br />
+            <br />
+            @for (int j = 0; j < Model.Answers[i].Count; j++)
+            {
+                <label class="form-check-label" for="@i-@j">
+                    @{
+                        lines = Model.Answers[i][j].AnswerText.Split("\n");
+                        foreach (var line in lines)
+                        {
+                            <label class="form-check-label dark-theme-texts" style="word-wrap: break-word;font-size:1.5rem;" for="@i-@j">@line</label>
+                            <br />
+                        }
+                    }
+
+                </label>
+                <br />
+                <br />
+            }
+        </div>
+    }
+    <br />
+    @if (Model.Survey.WillPublished == 0)
+    {
+        <a asp-action="YayinlaSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Survey.SurveyId"
+           class="btn btn-warning btn-sm">Ekle</a>
+
+        <a asp-action="SilSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Survey.SurveyId"
+           class="btn btn-danger btn-sm">Sil</a>
+
+        <a asp-action="SurveyList" asp-controller="Admin" asp-area="Admin"
+           class="btn btn-danger btn-sm">Geri Dön</a>
+
+    }
+    else
+    {
+        <a asp-action="KaldirSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Survey.SurveyId"
+           class="btn btn-warning btn-sm">Kaldır</a>
+
+        <a asp-action="SilSurvey" asp-controller="Admin" asp-area="Admin" asp-route-id="@Model.Survey.SurveyId"
+           class="btn btn-danger btn-sm">Sil</a>
+
+        <a asp-action="SurveyList" asp-controller="Admin" asp-area="Admin"
+           class="btn btn-danger btn-sm">Geri Dön</a>
+    }
+</div>
+
+<style>
+    .questions {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 0.5rem;
+        padding: 0.5rem;
+        background-color: #efebc4;
+    }
+</style>
+

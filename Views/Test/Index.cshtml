@@ -1,0 +1,486 @@
+﻿@model List<Test>
+
+<meta http-equiv="refresh" content="10">
+@{
+    string[] months = new string[] { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+}
+
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4" style="padding:7rem;">
+    @foreach (var item in Model)
+    {
+        if (item.WillPublished == 1)
+        {
+            DateTime openTime = item.CreatedDateTime.AddMinutes(item.Duration);
+
+            <div class="col mb-4"style="min-width:15rem;">
+                <div class="card card-margin">
+                    <div class="card-header no-border">
+                        @if (CompareDate(openTime, DateTime.Now))
+                        {
+                            <h6 class="dark-theme-texts card-title">Testin Süresi Doldu</h6>
+                        }
+                        else
+                        {
+                            int minutes = Convert.ToInt32(((openTime - DateTime.Now).TotalMinutes));
+                            int seconds = Convert.ToInt32(((openTime - DateTime.Now).TotalSeconds));
+
+                            if (seconds <= 60)
+                            {
+                                <h6 class="dark-theme-texts card-title">1 Dakikadan az kaldı</h6>
+                            }
+                            else
+                            {
+
+
+                                <h6 class="dark-theme-texts card-title">@minutes Dakika kaldı</h6>
+                            }
+                        }
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="widget-49">
+                            <div class="widget-49-title-wrapper">
+                                <div class="widget-49-date-primary">
+                                    <span class="widget-49-date-day dark-theme-texts">@item.CreatedDateTime.Day</span>
+                                    <span class="widget-49-date-month dark-theme-texts">@months[item.CreatedDateTime.Month - 1]</span>
+                                </div>
+                                <div class="widget-49-meeting-info">
+                                    <span class="widget-49-pro-title dark-theme-texts"style="font-size:1.25rem;">@item.Name</span>
+                                    <span class="widget-49-meeting-time dark-theme-texts">
+                                        @(item.CreatedDateTime.Hour).@(item.CreatedDateTime.Minute) to @(openTime.Hour).@(openTime.Minute) Hrs
+                                    </span>
+                                    <i class="widget-49-pro-title dark-theme-texts" style="font-size:0.7rem;color:rgba(223,223,223,0.6)">Created By: @item.CreatedBy</i>
+                                </div>
+                            </div>
+                            <p class="dark-theme-texts"style="font-size:0.8rem;">@item.Description</p>
+
+                            <div class="widget-49-meeting-action dark-theme-texts">
+
+                                @if (CompareDate(openTime, DateTime.Now))
+                                {
+                                    <a asp-action="TestResult" asp-controller="Test" asp-route-id="@item.TestId"
+                                       class="btn btn-sm widget-49-pro-title dark-theme-texts n">Sonuçları gör</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="GetPollsterDetail" asp-controller="Test" asp-route-id="@item.TestId"
+                                       class="btn btn-sm widget-49-pro-title dark-theme-texts p">Katıl</a>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+</div>
+
+
+@{
+    bool CompareDate(DateTime date1, DateTime date2)
+    {
+        if (date1.Year < date2.Year)
+        {
+            return true;
+        }
+        else if (date1.Year == date2.Year)
+        {
+            if (date1.Month < date2.Month)
+            {
+                return true;
+            }
+            else if (date1.Month == date2.Month)
+            {
+                if (date1.Day < date2.Day)
+                {
+                    return true;
+                }
+                else if (date1.Day == date2.Day)
+                {
+                    if (date1.Hour < date2.Hour)
+                    {
+                        return true;
+                    }
+                    else if (date1.Hour == date2.Hour)
+                    {
+                        if (date1.Minute < date2.Minute)
+                        {
+                            return true;
+                        }
+                        else if (date1.Minute == date2.Minute)
+                        {
+                            if (date1.Second < date2.Second)
+                            {
+                                return true;
+                            }
+                            else if (date1.Second == date2.Second)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+}
+<style>
+    .dark-theme-texts {
+        color: rgb(223,223,223);
+    }
+
+    .p {
+        background-color: #495057;
+        border-color: #0093ff;
+    }
+
+        .p:hover {
+            color: #0093ff;
+        }
+
+    .n {
+        background-color: #495057;
+        border-color: #b5a800;
+    }
+
+        .n:hover {
+            color: #b5a800;
+        }
+
+
+    .card-margin {
+        margin-bottom: 1.875rem;
+    }
+
+    .card {
+        border: 0;
+        box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #565353;
+        background-clip: border-box;
+        border: 1px solid #e6e4e9;
+        border-radius: 8px;
+    }
+
+        .card .card-header.no-border {
+            border: 0;
+        }
+
+        .card .card-header {
+            background: none;
+            padding: 0 0.9375rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            min-height: 50px;
+        }
+
+    .card-header:first-child {
+        border-radius: calc(8px - 1px) calc(8px - 1px) 0 0;
+    }
+
+    .widget-49 .widget-49-title-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #124143;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-primary .widget-49-date-day {
+                color: rgb(223,223,223);
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-primary .widget-49-date-month {
+                color: rgb(223,223,223);
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: red;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-secondary .widget-49-date-day {
+                color: red;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-secondary .widget-49-date-month {
+                color: red;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-success {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: rgb(223,223,223);
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-success .widget-49-date-day {
+                color: yellow;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-success .widget-49-date-month {
+                color: yellow;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #ebf7ff;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-info .widget-49-date-day {
+                color: #36afff;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-info .widget-49-date-month {
+                color: #36afff;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-warning {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: floralwhite;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-warning .widget-49-date-day {
+                color: #FFC868;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-warning .widget-49-date-month {
+                color: #FFC868;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-danger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #feeeef;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-danger .widget-49-date-day {
+                color: #F95062;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-danger .widget-49-date-month {
+                color: #F95062;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-light {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #fefeff;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-light .widget-49-date-day {
+                color: #f7f9fa;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-light .widget-49-date-month {
+                color: #f7f9fa;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-dark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #ebedee;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-dark .widget-49-date-day {
+                color: #394856;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-dark .widget-49-date-month {
+                color: #394856;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-date-base {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #f0fafb;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-day {
+                color: #68CBD7;
+                font-weight: 500;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-month {
+                color: #68CBD7;
+                line-height: 1;
+                font-size: 1rem;
+                text-transform: uppercase;
+            }
+
+        .widget-49 .widget-49-title-wrapper .widget-49-meeting-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 1rem;
+        }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-meeting-info .widget-49-pro-title {
+                color: rgb(223,223,223);
+                font-size: 14px;
+            }
+
+            .widget-49 .widget-49-title-wrapper .widget-49-meeting-info .widget-49-meeting-time {
+                color: rgb(223,223,223);
+                font-size: 13px;
+            }
+
+    .widget-49 .widget-49-meeting-points {
+        font-weight: 400;
+        font-size: 13px;
+        margin-top: .5rem;
+    }
+
+        .widget-49 .widget-49-meeting-points .widget-49-meeting-item {
+            display: list-item;
+            color: rgb(223,223,223);
+        }
+
+            .widget-49 .widget-49-meeting-points .widget-49-meeting-item span {
+                margin-left: .5rem;
+            }
+
+    .widget-49 .widget-49-meeting-action {
+        text-align: right;
+    }
+
+        .widget-49 .widget-49-meeting-action a {
+            text-transform: uppercase;
+        }
+</style>
